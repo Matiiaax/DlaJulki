@@ -1,0 +1,481 @@
+<!doctype html>
+<html lang="pl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Czy zostaniesz moją walentynką? 💘</title>
+
+  <style>
+    :root{
+      --bg1:#ff4d93;
+      --bg2:#ffd1e6;
+      --card: rgba(255,255,255,.78);
+      --text:#1f1021;
+      --muted:#6a3a57;
+      --yes1:#ff2d7a;
+      --yes2:#ff85bf;
+      --noBg: rgba(255,255,255,.92);
+      --shadow: 0 18px 40px rgba(0,0,0,.18);
+      --radius: 24px;
+    }
+
+    *{ box-sizing:border-box; }
+    html,body{ height:100%; }
+
+    body{
+      margin:0;
+      font-family: ui-rounded, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+      color:var(--text);
+      background:
+        radial-gradient(1000px 600px at 15% 10%, rgba(255,255,255,.55) 0%, transparent 60%),
+        radial-gradient(900px 600px at 90% 20%, rgba(255,255,255,.45) 0%, transparent 55%),
+        linear-gradient(135deg, var(--bg1), var(--bg2));
+      overflow-x:hidden;
+    }
+
+    .bg-dots{
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      opacity:.18;
+      background-image:
+        radial-gradient(circle at 12% 28%, rgba(255,255,255,.7) 0 2px, transparent 3px),
+        radial-gradient(circle at 27% 78%, rgba(255,255,255,.6) 0 2px, transparent 3px),
+        radial-gradient(circle at 63% 42%, rgba(255,255,255,.65) 0 2px, transparent 3px),
+        radial-gradient(circle at 86% 72%, rgba(255,255,255,.6) 0 2px, transparent 3px);
+      animation: floaty 10s ease-in-out infinite;
+    }
+    @keyframes floaty{ 0%,100%{ transform:translateY(0);} 50%{ transform:translateY(-10px);} }
+
+    main{
+      min-height:100%;
+      display:grid;
+      place-items:center;
+      padding:
+        calc(22px + env(safe-area-inset-top))
+        calc(14px + env(safe-area-inset-right))
+        calc(26px + env(safe-area-inset-bottom))
+        calc(14px + env(safe-area-inset-left));
+    }
+
+    .card{
+      width:min(560px, 100%);
+      background: var(--card);
+      border: 1px solid rgba(255,255,255,.75);
+      backdrop-filter: blur(10px);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: clamp(18px, 4vw, 28px);
+      text-align:center;
+      position: relative;
+      z-index: 1;
+      animation: cardIn .7s cubic-bezier(.2,.9,.2,1) both;
+    }
+    @keyframes cardIn{
+      from{ opacity:0; transform: translateY(18px) scale(.98); }
+      to{ opacity:1; transform: translateY(0) scale(1); }
+    }
+
+    .popIn{
+      opacity:1;
+      transform:none;
+      animation: popIn .55s ease both;
+      will-change: transform, opacity;
+    }
+    @keyframes popIn{
+      from{ opacity:0; transform: translateY(10px); }
+      to{ opacity:1; transform: translateY(0); }
+    }
+
+    h1{
+      margin: 6px 0 12px;
+      font-size: clamp(26px, 5.6vw, 42px);
+      line-height: 1.06;
+    }
+
+    .emoji-line{
+      font-size: clamp(18px, 4.2vw, 24px);
+      margin: 10px 0 14px;
+      letter-spacing: .5px;
+      filter: drop-shadow(0 10px 14px rgba(0,0,0,.10));
+    }
+
+    .gifWrap{
+      display:grid;
+      place-items:center;
+      margin: 8px 0 6px;
+    }
+    .gifImg{
+      width: min(340px, 86vw);
+      max-width: 380px;
+      border-radius: 18px;
+      display:block;
+      will-change: opacity, transform;
+    }
+    .gifImg.swap{ animation: gifSwap .26s ease both; }
+    @keyframes gifSwap{
+      from{ opacity:.35; transform: scale(.985); }
+      to{ opacity:1; transform: scale(1); }
+    }
+
+    .gifFallback{
+      width: min(340px, 86vw);
+      max-width: 380px;
+      border-radius: 18px;
+      padding: 18px 14px;
+      background: rgba(255,255,255,.55);
+      border: 1px dashed rgba(122,47,89,.22);
+      color: rgba(122,47,89,.95);
+      font-weight: 900;
+    }
+    code{
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      background: rgba(0,0,0,.06);
+      padding: 2px 6px;
+      border-radius: 8px;
+    }
+
+    .btns{
+      display:flex;
+      gap: 12px;
+      justify-content:center;
+      flex-wrap:wrap;
+      margin-top: 12px;
+      position: relative;
+      z-index: 2;
+      touch-action: manipulation;
+    }
+
+    .btns.mega-mode{
+      flex-direction: column;
+      align-items:center;
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    button{
+      border:0;
+      cursor:pointer;
+      font-weight: 1000;
+      letter-spacing: .6px;
+      padding: 14px 18px;
+      border-radius: 16px;
+      min-width: 160px;
+      font-size: 16px;
+      transition: transform .18s ease, box-shadow .18s ease, filter .18s ease;
+      user-select:none;
+      -webkit-tap-highlight-color: transparent;
+      transform-origin: center;
+      will-change: transform;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      line-height: 1;
+    }
+
+    #yes{
+      position: relative;
+      z-index: 5;
+      color:white;
+      background: linear-gradient(135deg, var(--yes1), var(--yes2));
+      box-shadow: 0 14px 26px rgba(255,45,122,.34);
+    }
+
+    #no{
+      color:#7a2f59;
+      background: var(--noBg);
+      border: 2px solid rgba(122,47,89,.22);
+      box-shadow: 0 10px 18px rgba(0,0,0,.10);
+    }
+
+    .texts{
+      margin-top: 14px;
+      min-height: 56px;
+      display:grid;
+      gap: 8px;
+      place-items:center;
+    }
+    .plea{
+      margin:0;
+      color:#7a2f59;
+      font-weight: 950;
+      font-size: clamp(14px, 3.4vw, 17px);
+    }
+
+    .success{
+      display:none;
+      padding-top: 6px;
+      animation: popIn .55s ease both;
+    }
+    .success h2{
+      margin: 10px 0 6px;
+      font-size: clamp(26px, 6vw, 44px);
+      line-height: 1.05;
+    }
+    .success p{
+      margin: 0 0 12px;
+      color: var(--muted);
+      font-weight: 800;
+    }
+
+    canvas#confetti{
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      z-index: 10;
+      display:none;
+    }
+
+    @media (prefers-reduced-motion: reduce){
+      .bg-dots{ animation:none !important; }
+      .card{ animation:none !important; }
+      .popIn{ animation:none !important; }
+      button{ transition:none !important; }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="bg-dots" aria-hidden="true"></div>
+  <canvas id="confetti"></canvas>
+
+  <main>
+    <section class="card">
+      <div id="question">
+        <h1 class="popIn" style="animation-delay:.05s;">Czy zostaniesz moją walentynką? 💘</h1>
+
+        <div class="gifWrap popIn" style="animation-delay:.12s;">
+          <img id="mainGif" class="gifImg" src="gif-start.gif" alt="GIF"
+               onerror="this.style.display='none'; document.getElementById('gifFallback').style.display='block';">
+          <div id="gifFallback" class="gifFallback" style="display:none;">
+            Nie widzę pliku: <code>gif-start.gif</code>
+          </div>
+        </div>
+
+        <div class="emoji-line popIn" style="animation-delay:.18s;">🌹🌸💐❤️💖💕</div>
+
+        <div class="btns popIn" id="btns" style="animation-delay:.24s;">
+          <button id="yes" type="button">TAK 💖</button>
+          <button id="no" type="button">NIE 😒</button>
+        </div>
+
+        <div class="texts popIn" style="animation-delay:.30s;">
+          <p class="plea" id="pleaText"></p>
+        </div>
+      </div>
+
+      <div class="success" id="success">
+        <div class="emoji-line">🌹💖❤️💕💐</div>
+        <h2>HURRAAAA! KOCHAM CIĘ! 💖</h2>
+        <p>Jesteś moją walentynką 🌹😘</p>
+
+        <div class="gifWrap">
+          <img id="yesGif" class="gifImg" src="gif-tak.gif" alt="GIF świętowania"
+               onerror="this.style.display='none'; document.getElementById('yesFallback').style.display='block';">
+          <div id="yesFallback" class="gifFallback" style="display:none;">
+            Nie widzę pliku: <code>gif-tak.gif</code>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const yesBtn   = document.getElementById("yes");
+    const noBtn    = document.getElementById("no");
+    const btnsWrap = document.getElementById("btns");
+    const mainGif  = document.getElementById("mainGif");
+    const pleaText = document.getElementById("pleaText");
+
+    const question = document.getElementById("question");
+    const success  = document.getElementById("success");
+
+    const startGif = "gif-start.gif";
+    const yesFinalGif = "gif-tak.gif";
+
+    // ✅ Twoja lista gifów na "NIE"
+    const noGifPool = [
+      "unhappy-1.gif",
+      "unhappy-2.gif",
+      "unhappy-3.gif",
+      "unhappy-5.gif",
+      "unhappy-4.png"
+    ];
+
+    let noClicks = 0;
+    let noGifIndex = 0;
+
+    const pleas = [
+      "Noo weeeez 😒",
+      "Nie bądź taka 🤨🤨",
+      "A może jednak? 😌",
+      "Ja ci dam nie 😑😑😑",
+      "No kliknij tak 😤😤",
+      "Ej no 😟😟😟",
+      "No proszeeee 😞😞😞"
+    ];
+
+    function tinyShake(el){
+      el.animate(
+        [{ transform:"translateX(0)" },{ transform:"translateX(-4px)" },{ transform:"translateX(4px)" },{ transform:"translateX(0)" }],
+        { duration: 220 }
+      );
+    }
+
+    function setGif(src){
+      const busted = src + (src.includes("?") ? "&" : "?") + "v=" + Date.now();
+      mainGif.classList.remove("swap");
+      void mainGif.offsetWidth;
+      mainGif.src = busted;
+      mainGif.classList.add("swap");
+    }
+
+    function pickNextNoGif(){
+      if (!noGifPool.length) return startGif;
+      const src = noGifPool[noGifIndex % noGifPool.length];
+      noGifIndex++;
+      return src;
+    }
+
+    // ✅ TU jest wzrost przycisku: szerokość + wysokość + skala
+    function growYes(clicks){
+      const normalMax = 5;     // po 6 klikach ma być turbo
+      const normalStep = 0.12; // już od początku widać wzrost
+
+      const turboK = 0.28;     // turbo po 6
+      const turboPow = 2.25;
+
+      // tryb pionowy po 6, żeby było miejsce
+      if (clicks >= normalMax) btnsWrap.classList.add("mega-mode");
+      else btnsWrap.classList.remove("mega-mode");
+
+      // 1) Rosnący padding i font = rośnie WYSOKOŚĆ i SZEROKOŚĆ realnie
+      const extra = Math.max(0, clicks - normalMax);
+
+      const py = Math.min(14 + clicks * 1.2 + extra * 2.4, 54); // wysokość mocniej
+      const px = Math.min(18 + clicks * 1.6 + extra * 3.2, 86); // szerokość mocniej
+      const fs = Math.min(16 + clicks * 0.35 + extra * 0.85, 30);
+
+      yesBtn.style.padding = `${py}px ${px}px`;
+      yesBtn.style.fontSize = `${fs}px`;
+      yesBtn.style.minWidth = (clicks >= normalMax) ? "min(92vw, 520px)" : "160px";
+      yesBtn.style.borderRadius = (clicks >= normalMax) ? "22px" : "16px";
+
+      // wymuś przeliczenie rozmiaru
+      void yesBtn.offsetWidth;
+
+      // 2) Skala (wizualnie jeszcze większe)
+      let scale;
+      if (clicks <= normalMax) {
+        scale = 1 + clicks * normalStep;
+      } else {
+        const base = 1 + normalMax * normalStep;
+        const t = clicks - normalMax;
+        scale = base + turboK * Math.pow(t, turboPow);
+      }
+
+      // 3) Cap do ekranu: ma urosnąć bardzo, ale NIE “wyjść poza stronę”
+      const wCap = (window.innerWidth  * 0.96) / yesBtn.offsetWidth;
+      const hCap = (window.innerHeight * 0.78) / yesBtn.offsetHeight;
+      scale = Math.min(scale, wCap, hCap);
+
+      yesBtn.style.transform = `scale(${scale})`;
+      yesBtn.style.filter = `saturate(${Math.min(1 + clicks * 0.06, 1.8)})`;
+    }
+
+    noBtn.addEventListener("click", () => {
+      noClicks++;
+
+      setGif(pickNextNoGif());
+      pleaText.textContent = pleas[(noClicks - 1) % pleas.length];
+
+      growYes(noClicks);
+      tinyShake(noBtn);
+
+      if (noClicks >= 10) {
+        noBtn.textContent = "NIE… chyba żartuję 🙃";
+        noBtn.style.opacity = "0.92";
+      }
+    });
+
+    yesBtn.addEventListener("click", () => {
+      question.style.display = "none";
+      success.style.display = "block";
+      startConfetti(1600);
+    });
+
+    // konfetti (bez bibliotek)
+    const canvas = document.getElementById("confetti");
+    const ctx = canvas.getContext("2d");
+    let pieces = [];
+    let rafId = null;
+
+    function resizeCanvas(){
+      const dpr = devicePixelRatio || 1;
+      canvas.width  = innerWidth * dpr;
+      canvas.height = innerHeight * dpr;
+      ctx.setTransform(dpr,0,0,dpr,0,0);
+    }
+
+    window.addEventListener("resize", () => {
+      resizeCanvas();
+      growYes(noClicks);
+    });
+
+    function spawn(n=240){
+      pieces = [];
+      for(let i=0;i<n;i++){
+        pieces.push({
+          x: Math.random()*innerWidth,
+          y: -20 - Math.random()*innerHeight*0.2,
+          w: 4 + Math.random()*6,
+          h: 3 + Math.random()*5,
+          vx: -2 + Math.random()*4,
+          vy: 2 + Math.random()*5,
+          r: Math.random()*Math.PI,
+          vr: -0.18 + Math.random()*0.36,
+          c: `hsl(${Math.floor(Math.random()*360)}, 90%, 65%)`
+        });
+      }
+    }
+
+    function tick(){
+      ctx.clearRect(0,0,innerWidth,innerHeight);
+      for(const p of pieces){
+        p.x += p.vx; p.y += p.vy; p.r += p.vr;
+        p.vx *= 0.995; p.vy *= 0.995; p.vy += 0.02;
+        ctx.save();
+        ctx.translate(p.x,p.y);
+        ctx.rotate(p.r);
+        ctx.fillStyle = p.c;
+        ctx.fillRect(-p.w/2, -p.h/2, p.w, p.h);
+        ctx.restore();
+      }
+      pieces = pieces.filter(p => p.y < innerHeight + 80);
+      if(pieces.length) rafId = requestAnimationFrame(tick);
+      else stopConfetti();
+    }
+
+    function startConfetti(ms=1500){
+      resizeCanvas();
+      canvas.style.display = "block";
+      spawn(240);
+      if(rafId) cancelAnimationFrame(rafId);
+      tick();
+      setTimeout(stopConfetti, ms);
+    }
+
+    function stopConfetti(){
+      if(rafId) cancelAnimationFrame(rafId);
+      rafId = null;
+      pieces = [];
+      canvas.style.display = "none";
+    }
+
+    // start
+    mainGif.addEventListener("error", () => setGif(startGif));
+    growYes(0);
+    document.getElementById("yesGif").src = yesFinalGif;
+  </script>
+</body>
+</html>
